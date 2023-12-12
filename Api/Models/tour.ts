@@ -1,5 +1,5 @@
 export interface tour{
-    _id: string;
+    id: string;
     startLocation:startLocation;
     ratingsAverage:number;
     ratingsQuantity:number;

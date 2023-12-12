@@ -1,9 +1,28 @@
 import { Request,Response } from "express";
 import { User } from "../Models/user";
-let users:User[] = [];
+let users:User[] = [
+  {
+id:1,
+role:"user",
+active:true,
+name:"samuel",
+email:"samkam@gmail.com",
+photo:"user-one.jpg",
+password:"test1234"
+},
+{
+id:2,
+role:"user2",
+active:true,
+name:"sam",
+email:"sam@gmail.com",
+photo:"user-two.jpg",
+password:"test1234"
+}
+];
 export const createUser = (req:Request,res:Response):void=>{
     const user:User ={
-_id:users.length + 1,
+id:users.length + 1,
 role:req.body.role,
 active:req.body.active,
 name:req.body.name,
@@ -20,7 +39,50 @@ password:req.body.password
   })
 }
 
-export const addUser = (req:Request,res:Response):void=>{
+export const getUsers = (req:Request,res:Response):void=>{
+res.status(200).json({
+  status:"success",
+  message:"All users",
+  body:users
+})
+}
+export const getOneUser = (req:Request,res:Response):void=>{
+ const user = users.find(x=>x.id=== parseInt(req.params.id));
+ res.status(200).json({
+  status:"success",
+  message:"got user",
+  body:user
+ })
+}
 
+export const updateUser = (req:Request,res:Response):void=>{
+ const user =  users.find(x=>x.id=== parseInt(req.params.id));
+ if(!user){
+  res.status(404).json({status:"not found"})
+ }else{
+  user.name = req.body.title || user.name;
+  user.email = req.body.email || user.email;
+  user.photo = req.body.photo || user.photo;
+  user.role = req.body.role || user.role;
+  user.active = req.body.active || user.active;
+  user.password = req.body.password || user.password;
+  res.status(201).json({
+    status:"success",
+    message:"updated successfully",
+    body:user
+  })
+ }
+}
+export const deleteUser = (req:Request, res:Response):void => {
+  //get the index of passed value
+  const user =  users.findIndex(x=>x.id=== parseInt(req.params.id));
+if(user === -1){
+res.status(404).json({status:"failure",message:"user not found"})
+}
+users.splice(user,1);
+res.status(204).json({
+  status:"success",
+  message:"user deleted successfully"
+})
 
 }
